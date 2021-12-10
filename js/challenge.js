@@ -8,11 +8,10 @@ const pause = document.querySelector('#pause')
 const buttons = document.querySelector('#buttons')
 const commentInput = document.querySelector('#comment-input')
 const commentsContainer = document.querySelector('#list')
+const form = document.querySelector('#comment-form')
 const submit = document.querySelector('#submit')
 
-    // make stuff
-const numLike = document.createElement('li')
-const comment = document.createElement('p')
+    // make restart button
 const restart = document.createElement('button')
 restart.textContent = 'restart';
 buttons.append(restart)
@@ -23,7 +22,7 @@ plus.addEventListener('click', handlePlus)
 like.addEventListener('click', handleLike)
 pause.addEventListener('click', handlePause)
 restart.addEventListener('click', handleRestart)
-submit.addEventListener('click', handleComment)
+form.addEventListener('submit', handleComment)
 
 
     // counter
@@ -43,17 +42,38 @@ function handlePlus() {
     counter.innerText = i++
 }
 
-let numClicks = 0;
-function handleLike() {
-    numClicks++;
-    numLike.textContent = `${i - 1} has been liked ${numClicks} times`
-    // if (numClicks = 1) {
-    //     numLike.innerHTML = `${i} has been liked ${numClicks} time`
-    // } else if (numClicks = 0 || numClicks > 1) {
-    //     numLike.innerHTML = `${i} has been liked ${numClicks} times`
-    // }
-    likesContainer.append(numLike)
-    // not sure how to create multiple li's instead of continuously updating one li(for loop?)
+// let numClicks = {};
+// function handleLike() {
+//     let seconds = counter.innerText
+//     const numLike = document.createElement('li')
+//     numLike.id = seconds
+//     const updatedLike = document.getElementById(seconds)
+//     console.log(counter.innerText)
+//     if (numClicks[seconds]) {
+//         numClicks[seconds] + 1;
+//         updatedLike.innerText = `${seconds} has been liked ${numClicks[seconds]} times`
+//     } else {
+//         numClicks[seconds] = 1;
+//         numLike.innerText = `${seconds} has been liked ${numClicks[seconds]} time`
+//         likesContainer.append(numLike)
+//     }
+//     // likesContainer.append(numLike)
+// }
+
+let numberTracker = {}
+function handleLike(){
+    let second = counter.innerText
+    numberTracker[second] = numberTracker[second] || 0
+    numberTracker[second] += 1
+    renderLikes()
+  }
+  function renderLikes(){
+    likesContainer .innerHTML = ""
+    for (let key in numberTracker){
+        const li = document.createElement("li")
+        li.innerText = `${key} has been liked ${numberTracker[key]} time(s).`
+        likesContainer.append(li)
+    }
 }
 
 function handlePause() {
@@ -82,7 +102,8 @@ function handleRestart() {
 
 function handleComment(e) {
     e.preventDefault();
-    comment.innerText = commentInput.value
+    const comment = document.createElement('p')
+    console.log(e.target[0].value)
+    comment.innerText = e.target[0].value
     commentsContainer.append(comment)
-    // again, creating and updating one p tag, and not creating multiples
 }
